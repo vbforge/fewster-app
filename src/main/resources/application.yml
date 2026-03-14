@@ -1,0 +1,9 @@
+# Root application.yml — activates the correct Spring profile.
+#
+# In Docker the container sets SPRING_PROFILE=docker via docker-compose.yml,
+# which loads application-docker.yml.
+# Locally (no env var) it falls back to 'dev', loading application-dev.yml.
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:dev}

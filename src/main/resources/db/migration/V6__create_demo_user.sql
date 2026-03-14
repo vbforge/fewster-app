@@ -1,0 +1,1 @@
+INSERT INTO users (role, username, password) values ('USER', 'demouser', 'demopassword')

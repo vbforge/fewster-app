@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Fewster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/fewster.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header-frag :: header}"></div>
+
+<main>
+  <div class="container" style="padding-top:2rem;padding-bottom:3rem;max-width:820px;">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <h1 class="page-title">Account settings</h1>
+      <p class="page-subtitle">
+        Signed in as
+        <span class="text-mono" style="color:var(--text-primary);"
+              th:text="${currentUsername}">username</span>
+      </p>
+    </div>
+
+    <!-- Flash messages -->
+    <div th:if="${successUsername}" class="alert alert-success mb-3" role="alert">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+      <span th:text="${successUsername}">Username updated</span>
+    </div>
+
+    <div class="settings-grid">
+
+      <!-- ── Change username ─────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            Change username
+          </span>
+        </div>
+        <div class="card-body">
+
+          <div th:if="${usernameError}" class="alert alert-danger mb-3" role="alert">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>
+            <span th:text="${usernameError}">Error</span>
+          </div>
+
+          <form th:action="@{/settings/username}" method="post"
+                th:object="${changeUsernameDTO}">
+
+            <div class="form-group">
+              <label class="form-label">Current username</label>
+              <input type="text" class="form-control"
+                     th:value="${currentUsername}" disabled
+                     style="opacity:.5;cursor:not-allowed;">
+            </div>
+
+            <div class="form-group">
+              <label for="newUsername" class="form-label">New username</label>
+              <input type="text"
+                     id="newUsername"
+                     class="form-control"
+                     th:classappend="${#fields.hasErrors('newUsername')} ? 'is-invalid'"
+                     th:field="*{newUsername}"
+                     placeholder="new_username"
+                     autocomplete="username">
+              <div th:if="${#fields.hasErrors('newUsername')}" class="field-error mt-1">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>
+                <span th:errors="*{newUsername}">Error</span>
+              </div>
+              <p class="password-hint">5–20 characters. Letters, digits, and underscores only.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              Update username
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- ── Change password ─────────────────────────────────────── -->
+      <div class="card danger-zone">
+        <div class="card-header">
+          <span class="card-title" style="color:var(--danger);">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            </svg>
+            Change password
+          </span>
+        </div>
+        <div class="card-body">
+
+          <div th:if="${passwordError}" class="alert alert-danger mb-3" role="alert">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>
+            <span th:text="${passwordError}">Error</span>
+          </div>
+
+          <form th:action="@{/settings/password}" method="post"
+                th:object="${changePasswordDTO}">
+
+            <div class="form-group">
+              <label for="currentPassword" class="form-label">Current password</label>
+              <div style="position:relative;">
+                <input type="password"
+                       id="currentPassword"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('currentPassword')} ? 'is-invalid'"
+                       th:field="*{currentPassword}"
+                       placeholder="••••••••"
+                       autocomplete="current-password"
+                       style="padding-right:2.5rem;">
+                <button type="button" onclick="togglePwd('currentPassword',this)"
+                        style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:.2rem;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+                </button>
+              </div>
+              <div th:if="${#fields.hasErrors('currentPassword')}" class="field-error mt-1">
+                <span th:errors="*{currentPassword}">Error</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword" class="form-label">New password</label>
+              <div style="position:relative;">
+                <input type="password"
+                       id="newPassword"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('newPassword')} ? 'is-invalid'"
+                       th:field="*{newPassword}"
+                       placeholder="••••••••"
+                       autocomplete="new-password"
+                       style="padding-right:2.5rem;">
+                <button type="button" onclick="togglePwd('newPassword',this)"
+                        style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:.2rem;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+                </button>
+              </div>
+              <div th:if="${#fields.hasErrors('newPassword')}" class="field-error mt-1">
+                <span th:errors="*{newPassword}">Error</span>
+              </div>
+              <p class="password-hint">5–64 chars. At least one uppercase, one lowercase, one digit.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword" class="form-label">Confirm new password</label>
+              <div style="position:relative;">
+                <input type="password"
+                       id="confirmPassword"
+                       class="form-control"
+                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+                       th:field="*{confirmPassword}"
+                       placeholder="••••••••"
+                       autocomplete="new-password"
+                       style="padding-right:2.5rem;">
+                <button type="button" onclick="togglePwd('confirmPassword',this)"
+                        style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:.2rem;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>
+                </button>
+              </div>
+              <div th:if="${#fields.hasErrors('confirmPassword')}" class="field-error mt-1">
+                <span th:errors="*{confirmPassword}">Error</span>
+              </div>
+            </div>
+
+            <div class="alert alert-warning mb-3" style="font-size:.82rem;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+              You will be logged out after changing your password.
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">
+              Update password
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments/footer-frag :: footer}"></div>
+
+<script>
+function togglePwd(fieldId, btn) {
+  const input = document.getElementById(fieldId);
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.style.color = showing ? 'var(--text-muted)' : 'var(--accent-hover)';
+}
+</script>
+</body>
+</html>

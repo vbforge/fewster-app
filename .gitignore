@@ -1,0 +1,52 @@
+# ================================================================
+# Fewster — .gitignore
+# ================================================================
+
+# ── Secrets & environment ────────────────────────────────────────
+.env
+*.env
+.env.*
+!.env.example
+
+# ── Maven build output ───────────────────────────────────────────
+target/
+*.jar
+*.war
+*.ear
+
+# ── IDE — IntelliJ IDEA ──────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ── IDE — VS Code ────────────────────────────────────────────────
+.vscode/
+
+# ── IDE — Eclipse ────────────────────────────────────────────────
+.classpath
+.project
+.settings/
+bin/
+
+# ── OS generated ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Spring Boot local config overrides ───────────────────────────
+# application-local.yml and application-local.properties
+# are used for personal overrides that must never be committed
+application-dev.yml
+application-docker.yml
+
+# ── Docker local overrides ───────────────────────────────────────
+docker-compose.yml
+
+# ── Logs ─────────────────────────────────────────────────────────
+*.log
+logs/
+
+# other files to ignore:
+documentation/
